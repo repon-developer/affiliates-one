@@ -63,6 +63,7 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
 
             affiliates_one_save_post(current($offer_items));
         }
+        flush_rewrite_rules();
     }
 
     function handle_action() {
@@ -83,6 +84,8 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
         $post_id = affiliates_one_save_post($offer);
 
         $permalink = remove_query_arg( ['publish-offer', '_nonce']);
+
+        flush_rewrite_rules();
         exit(wp_safe_redirect( $permalink ));        
     }
 
@@ -232,7 +235,7 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
 
     function column_published( $offer ) {
         if ( $offer->published ) {
-            return _e('Published', 'affiliates-one');
+            _e('Published - Return LATER', 'affiliates-one');
         }
 
         $permalink = add_query_arg([

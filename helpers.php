@@ -77,20 +77,19 @@ function affiliates_one_save_post($offer) {
     update_post_meta( $post_id, 'product_description', $offer->product_description);
     
     if ( $offer->default_tracking_url ) {
+
         $short_link_id = $wpdb->get_var("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = 'offer_url' AND meta_value = '$offer->default_tracking_url'");
 
         $short_link_id = wp_insert_post([
-            'id' => $short_link_id, 
+            'ID' => $short_link_id, 
             'post_title' => $offer->id, 
             'post_type' => 'short_link', 
             'post_status' => 'publish'
         ]);
-
-        flush_rewrite_rules();
-
+        
         if ( $short_link_id ) {
             update_post_meta( $post_id, 'tracking_short_link', $short_link_id);
-            update_post_meta( $short_link_id, 'offer_url', $offer->tracking_url);
+            update_post_meta( $short_link_id, 'offer_url', $offer->default_tracking_url);
         }
     }
     
@@ -102,7 +101,7 @@ function affiliates_one_save_post($offer) {
     if ( !has_post_thumbnail( $post_id ) ) {
         $attach_id = affiliatesone_image_upload($offer->brand_image_url);
         set_post_thumbnail( $post_id, $attach_id );
-    }  
+    }
 
     return $post_id;
 }
