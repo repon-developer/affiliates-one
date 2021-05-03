@@ -75,7 +75,17 @@ function affiliates_one_save_post($offer) {
     update_post_meta( $post_id, 'short_description', $offer->short_description);
     update_post_meta( $post_id, 'brand_background', $offer->brand_background);
     update_post_meta( $post_id, 'product_description', $offer->product_description);
-    update_post_meta( $post_id, 'tracking_url', $offer->tracking_url);
+    
+    if ( $offer->default_tracking_url ) {
+        $short_link_id = $wpdb->get_var("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = 'offer_url' AND meta_value = '$offer->default_tracking_url'");
+        $short_link_id = wp_insert_post(['id' => $short_link_id, 'post_title' => $offer->name, 'post_type' => 'offer_link', 'post_status' => 'publish']);
+        wp_update_post(['id' => $short_link_id, 'post_title' => $short_link_id]);
+
+        if ( $short_link_id ) {
+            update_post_meta( $post_id, 'tracking_short_link', $short_link_id);
+            update_post_meta( $short_link_id, 'offer_url', $offer->tracking_url);
+        }
+    }
     
     $creatives = affiliatesone_get_creatives($offer->id);
     if ( count($creatives) > 0 ) {
@@ -133,8 +143,9 @@ function affiliatesone_get_creatives($offer_id) {
     ];
     
     $response = @file_get_contents(add_query_arg($query_arg, 'https://api.affiliates.com.tw/api/v1/affiliates/creatives.json'));
-    $data = json_decode($response);
-    return is_array($data->data->creatives) ? $data->data->creatives : [];
+
+    $result = json_decode($response);
+    return is_array($result->data->creatives) ? $result->data->creatives : [];
 }
 
 function affiliates_one_logs($line, $end = false) {
@@ -150,3 +161,5 @@ function affiliates_one_logs($line, $end = false) {
     fwrite($fp, implode("\r\n", $logs)); 
     fclose($fp);
 }
+
+

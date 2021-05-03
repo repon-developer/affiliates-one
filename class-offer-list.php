@@ -16,10 +16,16 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
         }
         
         if ( $_POST['filter_action'] != 'Filter') return;
-        $permalink = add_query_arg( 'category-group', $_POST['category-group'] );
-
+        
+        $permalink = add_query_arg( 'category-group', $_POST['category-group']);
         if ( empty($_POST['category-group'])) {
-            $permalink = remove_query_arg('category-group');
+            $permalink = remove_query_arg('category-group', $permalink);
+        }
+
+        if ( !empty($_POST['search-offer'])) {
+            $permalink = add_query_arg('search-offer', $_POST['search-offer'], $permalink);
+        } else {
+            $permalink = remove_query_arg('search-offer', $permalink);
         }
 
         wp_safe_redirect( $permalink);
@@ -70,6 +76,7 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
             return $item->id == $_REQUEST['publish-offer'];
         });
 
+
         $offer = current($offer_items);
         if ( !$offer ) return;
         
@@ -88,6 +95,7 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
 
         $category_group = absint( $_GET['category-group']) ; ?>
         <div class="alignleft actions">
+        <input style="float:left" type="text" name="search-offer" value="<?php echo $_GET['search-offer'] ?>">
         <select name="category-group">
             <option value="">Select Category Group</option>
             <?php
@@ -95,8 +103,7 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
                 printf('<option value="%s" %s>%s</option>', $key, selected( $category_group, $key), $category);
             } ?>
         </select>
-           
-           
+        
         <?php
             submit_button( __( 'Filter' ), '', 'filter_action', false, array( 'id' => 'post-query-submit' ) );
             ?>
@@ -114,6 +121,10 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
             'api_key' => 'ac4b122e8941812664950edb11ca1854'
         ];
 
+        if ( !empty( $_GET['search-offer'] ) ) {
+            $query_arg['ids'] = $_GET['search-offer'];
+        }
+
         if ( absint( $_GET['category-group'] ) > 0 ) {
             $query_arg['category_group_ids'] = $_GET['category-group'];
         }
@@ -123,7 +134,12 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
         //if prev session and current session is same then return value from session
         if ( $_SESSION['affiliatesone_query_args'] !== $query_arg || empty($_SESSION['affiliates_one_offers'])) {
             $response = @file_get_contents(add_query_arg($query_arg, 'https://api.affiliates.com.tw/api/v1/affiliates/offers.json'));
-            $offers = json_decode($response)->data->offers;
+            $result = json_decode($response);
+            $_SESSION['affiliates_one_page'] = $result->page;
+            $_SESSION['affiliates_one_per_page'] = $result->per_page;
+            $_SESSION['affiliates_one_total'] = $result->data_count_total;
+
+            $offers = $result->data->offers;
         }
 
         //set session, if session query not change get offer from session for loading quickly
@@ -151,14 +167,10 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
             $exist = $wpdb->get_var("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = 'affiliates_one_offer' AND meta_value = '$offer->id'");
             $offer->published = (boolean) $exist;
         });
-        
-        $_SESSION['affiliates_one_page'] = $data->page;
-        $_SESSION['affiliates_one_per_page'] = $per_page;
-        $_SESSION['affiliates_one_total'] = $data->data_count_total;
-        $_SESSION['affiliates_one_offers'] = $offers;
 
+        $_SESSION['affiliates_one_offers'] = $offers;        
         
-        return $_SESSION['affiliates_one_offers'];
+        return $offers;
     }
 
     

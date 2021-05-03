@@ -19,6 +19,9 @@ class AffiliatesOne {
     }
 
     function load() {
+        require_once AO_DIR . 'cores.php';
+        new AffiliatesOne_Core();
+
         require_once AO_DIR . 'class-shortcodes.php';
         new AffiliatesOne_Shortcodes();
 
