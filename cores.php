@@ -3,15 +3,15 @@
 class AffiliatesOne_Core {
     function __construct() {
         add_action( 'init', [$this, 'offer_url_post_type_taxonomy'] );
-        //add_filter( 'post_type_link', [$this, 'offer_link_post_link'], 10, 2 );
+        add_filter( 'post_type_link', [$this, 'offer_link_post_link'], 1, 2 );
     }
 
     function offer_url_post_type_taxonomy() {
         $args = array(
             'labels'             => array(
-                'name'                  => _x( 'Offer Links', 'Post type general name', 'affiliates-one' ),
-                'singular_name'         => _x( 'Offer Link', 'Post type singular name', 'affiliates-one' ),
-                'menu_name'             => _x( 'Offer Links', 'Admin Menu text', 'affiliates-one' ),
+                'name'                  => _x( 'Short Links', 'Post type general name', 'affiliates-one' ),
+                'singular_name'         => _x( 'Short Link', 'Post type singular name', 'affiliates-one' ),
+                'menu_name'             => _x( 'Short Links', 'Admin Menu text', 'affiliates-one' ),
                 'name_admin_bar'        => _x( 'Link', 'Add New on Toolbar', 'affiliates-one' ),
                 'add_new'               => __( 'Add New', 'affiliates-one' ),
                 'add_new_item'          => __( 'Add New Link', 'affiliates-one' ),
@@ -23,20 +23,18 @@ class AffiliatesOne_Core {
                 'not_found'             => __( 'No Links found.', 'affiliates-one' ),
                 'not_found_in_trash'    => __( 'No Links found in Trash.', 'affiliates-one' ),
             ),
-            'public'             => true,
-            'show_ui'            => true,
-            'query_var'          => true,
-            'rewrite'            => array( 'slug' => 'go/%link_type%' ),
-            'capability_type'    => 'post',
-            'has_archive'        => true,
-            'hierarchical'       => false,
+            'public'            => true,
+            'show_ui'           => true,
+            'has_archive'       => true,
+            'menu_icon'         => 'dashicons-admin-links',
+            'rewrite'            => array( 'slug' => 'go/%offer_type%', 'with_front' => false ),
             'menu_position'      => 20,
             'supports'           => array( 'title', 'editor'),
-            'taxonomies'         => array( 'offer_type',),
+            'taxonomies'         => array( 'offer_type'),
             'show_in_rest'       => true
         );
           
-        register_post_type( 'offer_link', $args );
+        register_post_type( 'short_link', $args );
 
         $labels = array(
             'name'              => _x( 'Offer Types', 'taxonomy general name', 'affiliates-one' ),
@@ -66,9 +64,9 @@ class AffiliatesOne_Core {
         if ( is_object( $post ) ){
             $terms = wp_get_object_terms( $post->ID, 'offer_type' );
             if( $terms ){
-                return str_replace( '%link_type%' , $terms[0]->slug , $post_link );
+                return str_replace( '%offer_type%' , $terms[0]->slug , $post_link );
             } else {
-                return str_replace( '/%link_type%' , '' , $post_link );
+                return str_replace( '%offer_type%' , 'link' , $post_link );
             }
         }
 
