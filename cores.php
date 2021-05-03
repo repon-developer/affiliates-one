@@ -4,6 +4,8 @@ class AffiliatesOne_Core {
     function __construct() {
         add_action( 'init', [$this, 'offer_url_post_type_taxonomy'] );
         add_filter( 'post_type_link', [$this, 'offer_link_post_link'], 1, 2 );
+
+        add_action( 'template_redirect', [$this, 'short_link_redirect'], 1044);
     }
 
     function offer_url_post_type_taxonomy() {
@@ -71,5 +73,13 @@ class AffiliatesOne_Core {
         }
 
         return $post_link;  
+    }
+
+    function short_link_redirect() {
+        if( is_singular( 'short_link' ) ) {
+            if ( $get_link = get_post_meta( get_the_id(), 'offer_url', true) ) {
+                exit(wp_redirect( $get_link));
+            }
+        }
     }
 }
