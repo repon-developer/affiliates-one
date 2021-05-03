@@ -98,7 +98,7 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
 
         $category_group = absint( $_GET['category-group']) ; ?>
         <div class="alignleft actions">
-        <input style="float:left" type="text" name="search-offer" value="<?php echo $_GET['search-offer'] ?>">
+        <input style="float:left" type="text" placeholder="Offer IDs ex. 477,264" name="search-offer" value="<?php echo $_GET['search-offer'] ?>">
         <select name="category-group">
             <option value="">Select Category Group</option>
             <?php

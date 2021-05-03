@@ -36,6 +36,7 @@ class AffiliatesOne_Shortcodes {
         extract($atts);
 
         $short_link_id = get_post_meta( get_the_id(), 'tracking_short_link', true);
+        if ( !$short_link_id) return '';
 
         $post = get_post( $short_link_id );
 
@@ -52,9 +53,8 @@ class AffiliatesOne_Shortcodes {
         $atts['class'] = $class;
         $atts['rel'] = $rel;
 
-
         ob_start(); ?>
-        <a href="<?php echo $permalink; ?>" <?php implode(' ', $atts) ?>><?php echo $content; ?></a>
+        <a href="<?php echo $permalink; ?>" <?php implode(' ', $atts) ?>><?php echo do_shortcode( $content ); ?></a>
         <?php return ob_get_clean();
     }
 
