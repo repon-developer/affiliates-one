@@ -78,7 +78,9 @@ function affiliates_one_save_post($offer) {
     update_post_meta( $post_id, 'tracking_url', $offer->tracking_url);
     
     $creatives = affiliatesone_get_creatives($offer->id);
-    update_post_meta( $post_id, 'discount_info', $creatives);
+    if ( count($creatives) > 0 ) {
+        update_post_meta( $post_id, 'discount_info', $creatives);
+    }
 
     if ( !has_post_thumbnail( $post_id ) ) {
         $attach_id = affiliatesone_image_upload($offer->brand_image_url);
@@ -134,4 +136,17 @@ function affiliatesone_get_creatives($offer_id) {
     $data = json_decode($response);
     return is_array($data->data->creatives) ? $data->data->creatives : [];
 }
-affiliatesone_get_creatives(3080);
+
+function affiliates_one_logs($line, $end = false) {
+    $file = AO_DIR . 'logs.txt';
+
+    $logs = array_filter(array_map("trim", file($file)));
+    array_push($logs, $line);
+
+    $logs = array_slice($logs, -50);    
+    
+    
+    $fp = fopen($file, 'w');
+    fwrite($fp, implode("\r\n", $logs)); 
+    fclose($fp);
+}

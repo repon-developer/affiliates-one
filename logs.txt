@@ -1,0 +1,16 @@
+$file_name = 'file.txt';
+$max_lines = 3;              #maximum number of lines you want the file to have
+$new_line = 'Line 4';               #content of the new line to add to the file
+$file_lines = file($file_name);     #read the file's lines into an array
+#remove elements (lines) from the end of the
+#array until there's one less than $max_lines
+while(count($file_lines) >= $max_lines) {    
+    #remove the last line from the array
+    array_pop($file_lines);
+}
+#add the new line to the front of the array
+array_unshift($file_lines, $new_line);
+#write the lines to the file
+$fp = fopen($file_name, 'w');           #'w' to overwrite the file
+fwrite($fp, implode('', $file_lines)); 
+fclose($fp); 
