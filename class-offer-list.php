@@ -54,6 +54,9 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
         $offers = is_array($_SESSION['affiliates_one_offers']) ? $_SESSION['affiliates_one_offers'] : [];       
         
         $offer_ids = is_array($_POST['offers']) ? $_POST['offers'] : [];
+
+        affiliates_one_logs(sprintf("Posting these offers %s", implode(',', $offer_ids)));
+
         while ($offer_id = current($offer_ids)) {
             next($offer_ids);
 
@@ -79,11 +82,15 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
 
 
         $offer = current($offer_items);
-        if ( !$offer ) return;
+        if ( !$offer ) {
+            return affiliates_one_logs("Offer not found from session. We can't process it.");
+        };
         
         $post_id = affiliates_one_save_post($offer);
 
         $permalink = remove_query_arg( ['publish-offer', '_nonce']);
+
+        affiliates_one_logs("Updating permalink for short link");
 
         flush_rewrite_rules();
         exit(wp_safe_redirect( $permalink ));        
@@ -136,6 +143,7 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
 
         //if prev session and current session is same then return value from session
         if ( $_SESSION['affiliatesone_query_args'] !== $query_arg || empty($_SESSION['affiliates_one_offers'])) {
+            affiliates_one_logs("Getting offers from API https://api.affiliates.com.tw/api/v1/affiliates/offers.json");
             $response = @file_get_contents(add_query_arg($query_arg, 'https://api.affiliates.com.tw/api/v1/affiliates/offers.json'));
             $result = json_decode($response);
             $_SESSION['affiliates_one_page'] = $result->page;
@@ -149,6 +157,7 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
         $_SESSION['affiliatesone_query_args'] = $query_arg;
 
         if ( !is_array($offers) ) {
+            affiliates_one_logs("No offers found");
             $offers = [];
         }
 

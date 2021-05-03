@@ -35,7 +35,9 @@ function get_affiliatesone_category_groups() {
 }
 
 function affiliates_one_save_post($offer) {
-    if ( !is_object($offer) ) return false;
+
+    if ( !is_object($offer) ) return false; 
+    affiliates_one_logs(sprintf("Saving offer - %s (%s)", $offer->name, $offer->id));
 
     global $wpdb;
 
@@ -77,6 +79,7 @@ function affiliates_one_save_post($offer) {
     update_post_meta( $post_id, 'product_description', $offer->product_description);
     
     if ( $offer->default_tracking_url ) {
+        affiliates_one_logs(sprintf("Add tracking URL %s for this offer %s (%s)", $offer->default_tracking_url, $offer->name, $offer->id));
 
         $short_link_id = $wpdb->get_var("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = 'offer_url' AND meta_value = '$offer->default_tracking_url'");
 
@@ -99,15 +102,20 @@ function affiliates_one_save_post($offer) {
     }
 
     if ( !has_post_thumbnail( $post_id ) ) {
-        $attach_id = affiliatesone_image_upload($offer->brand_image_url);
-        set_post_thumbnail( $post_id, $attach_id );
+        $attach_id = affiliatesone_image_upload($offer->brand_image_url, $offer);
+        
+        if ( $attach_id ) {
+            affiliates_one_logs(sprintf("Add featured image for this offer %s (%s)", $offer->name, $offer->id));
+            set_post_thumbnail( $post_id, $attach_id );
+        }
     }
 
     return $post_id;
 }
 
-function affiliatesone_image_upload($image_url, $name = '') {
+function affiliatesone_image_upload($image_url, $offer = null) {
     if( !wp_http_validate_url($image_url) ) {
+        affiliates_one_logs(sprintf("Image URL is not valid - ", $offer->name, $offer->id));
         return false;
     }
     
