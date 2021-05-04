@@ -194,9 +194,11 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
     public function prepare_items() {
         $this->process_bulk_action();
         $this->handle_action();
-        $columns = $this->get_columns();
 
-        $per_page = 15;
+        
+        $columns = $this->get_columns();
+        
+        $per_page = $this->get_items_per_page( 'offers_per_page', 15 );
         $current_page = $this->get_pagenum();
 
         $this->items = $this->get_offers($current_page, $per_page);
@@ -273,7 +275,23 @@ class AffiliatesOne_Offer_page {
             session_start();
         }
 
+        add_filter( 'set-screen-option', [ __CLASS__, 'set_screen' ], 10, 3 );
         add_action( 'admin_menu',             array($this, 'register_admin_menu_page' ));         
+    }
+
+    public static function set_screen( $status, $option, $value ) {
+        return $value;
+    }
+
+    public function screen_option() {
+        $option = 'per_page';
+        $args = [
+            'label' => 'Offers Per Page',
+            'default' => 15,
+            'option' => 'offers_per_page'
+        ];
+
+        add_screen_option( $option, $args );
     }
 
     function register_admin_menu_page() {
@@ -288,7 +306,11 @@ class AffiliatesOne_Offer_page {
             array($this, 'affiliates_one_menu_callback'),
            'dashicons-awards',
         );
+
+        add_action( "load-$hook", [ $this, 'screen_option' ] );
     }
+
+
 
 
     function affiliates_one_menu_callback() {?>
