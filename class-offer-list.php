@@ -252,14 +252,17 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
     }
 
     function column_published( $offer ) {
-        if ( $offer->published ) {
-            _e('Published - Return LATER', 'affiliates-one');
-        }
-
         $permalink = add_query_arg([
             'publish-offer' => $offer->id,
             '_nonce' => wp_create_nonce( 'publish-offer' )
         ]);
+
+        if ( $offer->published ) {
+            //_e('Published', 'affiliates-one');
+            printf('<a class="button button-primary" href="%s">%s</a>', $permalink, __('Publish again - (Remove later)', 'affiliates-one') );
+            return;
+        }
+        
 
         printf('<a class="button button-primary" href="%s">%s</a>', $permalink, __('Publish', 'affiliates-one') );
     }

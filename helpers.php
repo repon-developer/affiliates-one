@@ -111,7 +111,7 @@ function affiliates_one_save_post_offer($offer) {
     if ( count($creatives) > 0 ) {
         update_post_meta( $post_id, 'discount_info', $creatives);
     } else {
-        affiliates_one_logs(sprintf("Creative date for available for offer %s (%s)", $offer->name, $offer->id));
+        affiliates_one_logs(sprintf("Creative data is not available for offer %s (%s)", $offer->name, $offer->id));
     }
 
     if ( !has_post_thumbnail( $post_id ) ) {
