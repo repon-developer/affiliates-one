@@ -91,7 +91,6 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
         $permalink = remove_query_arg( ['publish-offer', '_nonce']);
 
         affiliates_one_logs("Updating permalink for short link");
-
         flush_rewrite_rules();
         exit(wp_safe_redirect( $permalink ));        
     }
