@@ -64,7 +64,7 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
                 return $item->id == $offer_id;
             });
 
-            affiliates_one_save_post(current($offer_items));
+            affiliates_one_save_post_offer(current($offer_items));
         }
         flush_rewrite_rules();
     }
@@ -86,7 +86,7 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
             return affiliates_one_logs("Offer not found from session. We can't process it.");
         };
         
-        $post_id = affiliates_one_save_post($offer);
+        $post_id = affiliates_one_save_post_offer($offer);
 
         $permalink = remove_query_arg( ['publish-offer', '_nonce']);
 
@@ -124,10 +124,8 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
         global $wpdb;
 
         $query_arg = [
-            //'locale' => 'zh-TW',
             'page' => $current_page,
             'per_page' => $per_page,
-            'api_key' => 'ac4b122e8941812664950edb11ca1854'
         ];
 
         if ( !empty( $_GET['search-offer'] ) ) {
@@ -143,8 +141,9 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
         //if prev session and current session is same then return value from session
         if ( $_SESSION['affiliatesone_query_args'] !== $query_arg || empty($_SESSION['affiliates_one_offers'])) {
             affiliates_one_logs("Getting offers from API https://api.affiliates.com.tw/api/v1/affiliates/offers.json");
-            $response = @file_get_contents(add_query_arg($query_arg, 'https://api.affiliates.com.tw/api/v1/affiliates/offers.json'));
-            $result = json_decode($response);
+
+            $result = get_affiliates_one_offers($query_arg);
+
             $_SESSION['affiliates_one_page'] = $result->page;
             $_SESSION['affiliates_one_per_page'] = $result->per_page;
             $_SESSION['affiliates_one_total'] = $result->data_count_total;
@@ -163,7 +162,7 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
         array_walk($offers, function(&$offer) use($wpdb) {
             $offer->name_id = sprintf("(%d) %s", $offer->id, $offer->name);
 
-            $offer->categories = implode(', ', (array) $offer->categories);
+            $offer->categories_text = implode(', ', (array) $offer->categories);
 
             $country_flag = array_map(function($country) {
                 $flag = str_replace(' ', '-', $country);
@@ -219,12 +218,14 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
     public function column_default( $item, $column_name ) {
         switch( $column_name ) {
             case 'name_id':
-            case 'categories':
             case 'flags':
             case 'status':
             case 'published':
                 return $item->$column_name;
-
+                            
+            case 'categories':
+                return $item->categories_text;
+                
             default:
                 return print_r( $item, true ) ;
         }

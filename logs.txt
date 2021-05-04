@@ -1,7 +1,50 @@
+Creative date for available for offer ROSEGAL (4065)
+Saving offer - Photobook SG
+(4035)
+Creative date for available for offer Photobook SG
+(4035)
+Saving offer - Photobook HK (4034)
+Creative date for available for offer Photobook HK (4034)
+Saving offer - AUMEET 澳覓選物 (3991)
+Creative date for available for offer AUMEET 澳覓選物 (3991)
+Saving offer - 源生時養 (3986)
+Creative date for available for offer 源生時養 (3986)
+Saving offer - XPG Taiwan (4076)
+Add tracking URL https://vbtrax.com/track/clicks/6397/c627c2bf9e0522daf98bec35dc2e9753743940ca7cede1f1113ff408610756e9 for this offer XPG Taiwan (4076)
+Creative date for available for offer XPG Taiwan (4076)
+Saving offer - LARQ (4075)
+Add tracking URL https://vbtrax.com/track/clicks/6396/c627c2bf9e0522dcff89ec35dc2e9753743940ca7cede1f1113ff408610756e8 for this offer LARQ (4075)
+Creative date for available for offer LARQ (4075)
+Saving offer - Wish (4074)
+Add tracking URL https://vbtrax.com/track/clicks/6395/c627c2bf9e0522daf988ec35dc2e9753743940ca7cede1f1113ff408610756eb for this offer Wish (4074)
+Creative date for available for offer Wish (4074)
+Saving offer - Al-Ikhsan Sports MY (4011)
+Creative date for available for offer Al-Ikhsan Sports MY (4011)
+Saving offer - Grace Funeral (3989)
+Add tracking URL https://vbtrax.com/track/clicks/6292/c627c2bf9e0526dbf889ec35dc2e9753743940ca7cede1f1113ff408610656ec for this offer Grace Funeral (3989)
+Creative date for available for offer Grace Funeral (3989)
+Getting offers from API https://api.affiliates.com.tw/api/v1/affiliates/offers.json
+Saving offer - LUMIN Skincare (3985)
+Creative date for available for offer LUMIN Skincare (3985)
+Add featured image for this offer LUMIN Skincare (3985)
+Updating permalink for short link
 Getting offers from API https://api.affiliates.com.tw/api/v1/affiliates/offers.json
 Getting offers from API https://api.affiliates.com.tw/api/v1/affiliates/offers.json
-Saving offer - Pizza Hut (3035)
-Add tracking URL https://vbtrax.com/track/clicks/5034/c627c2bf9e0529def089ec35dc2e9753743940ca7cede1f1113ff40862045cea for this offer Pizza Hut (3035)
-Add featured image for this offer Pizza Hut (3035)
+Saving offer - Hans Select  (4023)
+Creative date for available for offer Hans Select  (4023)
+Add featured image for this offer Hans Select  (4023)
+Updating permalink for short link
+Getting offers from API https://api.affiliates.com.tw/api/v1/affiliates/offers.json
+Offer not found from session. We can't process it.
+Getting offers from API https://api.affiliates.com.tw/api/v1/affiliates/offers.json
+Saving offer - Hans Select  (4023)
+Add tracking URL https://vbtrax.com/track/clicks/6338/c627c2bf9e0529dbfa8cec35dc2e9753743940ca7cede1f1113ff40861075ce6 for this offer Hans Select  (4023)
+Creative date for available for offer Hans Select  (4023)
+Updating permalink for short link
+Getting offers from API https://api.affiliates.com.tw/api/v1/affiliates/offers.json
+Getting offers from API https://api.affiliates.com.tw/api/v1/affiliates/offers.json
+Saving offer - Hans Select  (4023)
+Add tracking URL https://vbtrax.com/track/clicks/6338/c627c2bf9e0529dbfa8cec35dc2e9753743940ca7cede1f1113ff40861075ce6 for this offer Hans Select  (4023)
+Creative date for available for offer Hans Select  (4023)
 Updating permalink for short link
 Getting offers from API https://api.affiliates.com.tw/api/v1/affiliates/offers.json

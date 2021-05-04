@@ -34,7 +34,18 @@ function get_affiliatesone_category_groups() {
     ];
 }
 
-function affiliates_one_save_post($offer) {
+function get_affiliates_one_offers($query_args = []) {
+    $query_args = wp_parse_args( $query_args, [
+    //    'locale' =>'zh-TW', 
+        'api_key' => 'ac4b122e8941812664950edb11ca1854'
+    ]);
+    
+
+    $response = @file_get_contents(add_query_arg($query_args, 'https://api.affiliates.com.tw/api/v1/affiliates/offers.json'));
+    return json_decode($response);
+}
+
+function affiliates_one_save_post_offer($offer) {
 
     if ( !is_object($offer) ) return false; 
     affiliates_one_logs(sprintf("Saving offer - %s (%s)", $offer->name, $offer->id));
@@ -62,12 +73,12 @@ function affiliates_one_save_post($offer) {
     $post_id = wp_insert_post($post_args);    
     if ( !$post_id ) return;
 
-    $categories = explode(',', $offer->categories);
+    require_once(ABSPATH . 'wp-admin/includes/taxonomy.php'); 
 
     $terms = array_map(function($category){
         $term = wp_create_term(trim($category), 'category');
         return $term['term_id'];
-    }, $categories);
+    }, $offer->categories);
     
     if ( count($terms) > 0 ) {
         wp_set_post_categories($post_id, $terms);
