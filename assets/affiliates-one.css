@@ -1,3 +1,16 @@
 .affiliates-one-wrap .wp-list-table img.flag {max-width: 16px}
 .affiliates-one-wrap .wp-list-table .column-thumbnail img {max-width: 100px}
 .affiliates-one-logs {padding: 10px; max-width: 900px; margin-top: 20px; border: 1px solid #ccc}
+
+.affiliates-one-wrap .heading-dashboard {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.affiliates-one-wrap .button-auto-post {
+    font-size: 20px;
+    margin-left: auto;
+    min-width: 250px;
+    text-align: center;
+}

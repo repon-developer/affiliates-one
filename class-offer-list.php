@@ -70,6 +70,13 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
     }
 
     function handle_action() {
+        if ( wp_verify_nonce( $_REQUEST['_nonce_autopost'], 'nonce_autopost') ) {
+            $auto_post_active = get_option( 'affiliates_one_autopost', false);
+            update_option('affiliates_one_autopost', !$auto_post_active);
+            $remove_autopost_link = remove_query_arg('_nonce_autopost');
+            exit(wp_safe_redirect( $remove_autopost_link ));
+        }
+
         if (!wp_verify_nonce( $_REQUEST['_nonce'], 'publish-offer')) {
             return;
         }
@@ -288,8 +295,18 @@ class AffiliatesOne_Offer_page {
 
         <div class="wrap affiliates-one-wrap">
             <div id="icon-users" class="icon32"></div>
-            <h2>Offers Overview</h2>
-            <?php ///$this->table_offer->prepare_items(); ?>
+
+            <div class="heading-dashboard">
+                <h2>Offers Overview</h2>
+                <?php
+                    $auto_post = get_option( 'affiliates_one_autopost', false);
+                    $button_text = $auto_post ? 'Running' : 'Stopped';
+                    $auto_post_link = add_query_arg( ['_nonce_autopost' => wp_create_nonce('nonce_autopost')] );
+                ?>
+
+                <a href="<?php echo $auto_post_link; ?>" class="button button-primary button-auto-post">Auto Post - <?php echo $button_text; ?></a>
+            </div>
+
             <form method="post">
                 <?php wp_nonce_field('_affiliate_one_overview', 'affiliate_one_overview'); ?>
                 <?php $this->table_offer->display(); ?>
