@@ -13,3 +13,15 @@
     margin-left: 20px;
     text-align: center;
 }
+
+ul.category-group-list {max-width: 620px;}
+
+ul.category-group-list > li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+ul.category-group-list li input {
+    width: 430px;
+}

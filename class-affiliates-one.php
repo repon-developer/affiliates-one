@@ -4,8 +4,10 @@ class AffiliatesOne {
     static $instance;
 
     function __construct() {
+        
         $this->load();
-
+        
+        add_filter( 'cron_schedules', array($this, 'affiliates_one_cron_schedule'));
         add_action( 'admin_enqueue_scripts', array($this, 'admin_enqueue_scripts' ));
         add_action( 'admin_menu', [$this, 'register_admin_menu_page'], 22);
     }
@@ -34,6 +36,20 @@ class AffiliatesOne {
         require_once AO_DIR . 'class-offer-list.php';
         new AffiliatesOne_Offer_page(); 
     }
+
+    function affiliates_one_cron_schedule( $schedules ) {
+        $interval = get_option( 'affiliates_one_interval', 3);
+        if ( absint( $interval ) == 0 ) {
+            $interval = 0;
+        }
+
+        $schedules['affiliates_one'] = array(
+            'interval' => DAY_IN_SECONDS * $interval,
+            'display' => __( 'Affiliates One' )
+        );
+
+        return $schedules;
+     }
 
     function admin_enqueue_scripts($hook) {
         $our_pages = ['toplevel_page_affiliates-one-offers', 'affiliates-one_page_affiliates-one-settings', 'affiliates-one_page_affiliates-one-logs'];

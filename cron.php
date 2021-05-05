@@ -11,7 +11,7 @@ class AffiliatesOne_Cron {
     function handle_affiliates_one_autopost_action($old_value, $autopost) {
         if ($autopost) {
             if (! wp_next_scheduled ( 'affiliates_one_get_offers_hook' )) {
-                wp_schedule_event( time(), 'daily', 'affiliates_one_get_offers_hook' );
+                wp_schedule_event( time(), 'affiliates_one', 'affiliates_one_get_offers_hook' );
             }
 
             return;

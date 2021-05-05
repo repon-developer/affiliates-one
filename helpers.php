@@ -35,9 +35,11 @@ function get_affiliatesone_category_groups() {
 }
 
 function get_affiliates_one_offers($query_args = []) {
+    $api_key = get_option( 'affiliates_one_api_key');
+    
     $query_args = wp_parse_args( $query_args, [
     //    'locale' =>'zh-TW', 
-        'api_key' => 'ac4b122e8941812664950edb11ca1854'
+        'api_key' => $api_key
     ]);
     
 
@@ -65,7 +67,8 @@ function affiliates_one_save_post_offer($offer) {
         'post_status' => 'publish'
     );
     
-    $get_template = get_post(get_option('affiliate_one_template'));
+    $get_template = get_post(get_option('affiliates_one_template'));
+
     if ( is_a($get_template, 'WP_Post') ) {
         $post_args['post_content'] = $get_template->post_content;
     }
@@ -85,7 +88,7 @@ function affiliates_one_save_post_offer($offer) {
 
     $terms = array_map(function($category){
         $term = wp_create_term(trim($category), 'category');
-        return $term['term_id'];
+        return is_integer($term) ? $term : $term['term_id'];        
     }, $offer->categories);
     
     if ( count($terms) > 0 ) {
@@ -170,11 +173,13 @@ function affiliatesone_image_upload($image_url, $offer = null) {
 }
 
 function affiliatesone_get_creatives($offer_id) {
+    $api_key = get_option( 'affiliates_one_api_key');
+
     $query_arg = [
         'locale' => 'zh-TW',        
         'offer_id' => $offer_id,
         'creative_type' => 'feed',
-        'api_key' => 'ac4b122e8941812664950edb11ca1854'
+        'api_key' => $api_key
     ];
     
     $response = @file_get_contents(add_query_arg($query_arg, 'https://api.affiliates.com.tw/api/v1/affiliates/creatives.json'));

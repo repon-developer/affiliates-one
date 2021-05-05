@@ -183,6 +183,7 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
 
             $exist = $wpdb->get_var("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = 'affiliates_one_offer' AND meta_value = '$offer->id'");
             $offer->published = (boolean) $exist;
+            $offer->post_id = $exist;
         });
 
         $_SESSION['affiliates_one_offers'] = $offers;        
@@ -259,11 +260,17 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
 
         if ( $offer->published ) {
             //_e('Published', 'affiliates-one');
-            printf('<a class="button button-primary" href="%s">%s</a>', $permalink, __('Publish again - (Remove later)', 'affiliates-one') );
+            //printf('<a class="button button-primary" href="%s">%s</a>', $permalink, __('Publish again - (Remove later)', 'affiliates-one') );
+            
+            if ( $post_permalink = get_permalink( $offer->post_id) ) {
+                printf('<a class="button button-primary" href="%s">%s</a>', $post_permalink, __('View Post', 'affiliates-one') );
+            }
             return;
         }
         
         printf('<a class="button button-primary" href="%s">%s</a>', $permalink, __('Publish', 'affiliates-one') );
+
+        
     }
 }
 
@@ -306,7 +313,7 @@ class AffiliatesOne_Offer_page {
             'manage_options',
             'affiliates-one-offers',
             array($this, 'affiliates_one_menu_callback'),
-           'dashicons-awards',
+           'dashicons-awards'
         );
 
         add_action( "load-$hook", [ $this, 'screen_option' ] );

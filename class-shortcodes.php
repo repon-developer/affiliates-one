@@ -65,13 +65,9 @@ class AffiliatesOne_Shortcodes {
         }
 
         ob_start();
-
-        wp_cache_set('discount_info', $discount_info[0]);
-        echo do_shortcode( $content );
-
         foreach ($discount_info as $discount) {
-            // wp_cache_set('discount_info', $discount);
-            // echo do_shortcode( $content );
+            wp_cache_set('discount_info', $discount);
+            echo do_shortcode( $content );
         }
 
         return ob_get_clean();
