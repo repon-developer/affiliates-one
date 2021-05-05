@@ -58,7 +58,7 @@ class AffiliatesOne {
             echo '<h2>' . __('Affiliates one logs', 'affiliates-one') . '</h2>';
 
             echo '<div class="affiliates-one-logs">';
-            $logs = fopen( AO_DIR . 'logs.txt','r');
+            $logs = fopen( AO_DIR . 'affliates.log','r');
             while ($line = fgets($logs)) {
                 echo($line) . '<br>' . "\r\n <hr>";
             }

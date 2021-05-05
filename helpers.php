@@ -184,7 +184,7 @@ function affiliatesone_get_creatives($offer_id) {
 }
 
 function affiliates_one_logs($line, $end = false) {
-    $file = AO_DIR . 'logs.txt';
+    $file = AO_DIR . 'affliates.log';
 
     $logs = array_filter(array_map("trim", file($file)));
     array_push($logs, $line);
