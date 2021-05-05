@@ -69,7 +69,6 @@ class AffiliatesOne_Shortcodes {
             wp_cache_set('discount_info', $discount);
             echo do_shortcode( $content );
         }
-
         return ob_get_clean();
     }
 
@@ -85,11 +84,21 @@ class AffiliatesOne_Shortcodes {
         
         $discount_info = wp_cache_get('discount_info');
         $method = 'discount_slug_' . $atts['field'];
+
+        if ( !is_object($discount_info) ) {
+            return null;
+        }
+
+        $field = $atts['field'];
         
         ob_start();
-        if ( is_object($discount_info) && method_exists($this, $method)) {
+        if ( method_exists($this, $method)) {
             $this->$method($atts, $content, $discount_info);
+
+        } else if ( !empty($discount_info->$field) ) {
+            echo $discount_info->$field;
         }
+
         return ob_get_clean();
     }
 

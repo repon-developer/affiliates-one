@@ -267,7 +267,7 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
             //printf('<a class="button button-primary" href="%s">%s</a>', $permalink, __('Publish again - (Remove later)', 'affiliates-one') );
             
             if ( $post_permalink = get_permalink( $offer->post_id) ) {
-                printf('<a class="button button-primary" href="%s">%s</a>', $post_permalink, __('View Post', 'affiliates-one') );
+                printf('<a target="_blank" class="button button-primary" href="%s">%s</a>', $post_permalink, __('View Post', 'affiliates-one') );
             }
             return;
         }
