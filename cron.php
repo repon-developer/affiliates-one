@@ -43,22 +43,5 @@ class AffiliatesOne_Cron {
                 affiliates_one_save_post_offer($offer);
             }
         }
-    }
-    
+    }   
 }
-
-
-add_action( 'init', function(){
-    if ( !isset($_GET['cron']) ) return;
-
-    $cron = get_option( 'cron' );
-
-    var_dump($cron);
-
-
-
-    //do_action( 'affiliates_one_get_offers_hook');
-    exit;
-});
-
-
