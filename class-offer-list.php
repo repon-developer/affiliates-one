@@ -263,7 +263,6 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
             return;
         }
         
-
         printf('<a class="button button-primary" href="%s">%s</a>', $permalink, __('Publish', 'affiliates-one') );
     }
 }
@@ -279,7 +278,7 @@ class AffiliatesOne_Offer_page {
         }
 
         add_filter( 'set-screen-option', [ __CLASS__, 'set_screen' ], 10, 3 );
-        add_action( 'admin_menu',             array($this, 'register_admin_menu_page' ));         
+        add_action( 'admin_menu', array($this, 'register_admin_menu_page' ));         
     }
 
     public static function set_screen( $status, $option, $value ) {
@@ -312,9 +311,6 @@ class AffiliatesOne_Offer_page {
 
         add_action( "load-$hook", [ $this, 'screen_option' ] );
     }
-
-
-
 
     function affiliates_one_menu_callback() {?>
 

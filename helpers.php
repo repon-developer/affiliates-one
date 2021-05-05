@@ -60,14 +60,22 @@ function affiliates_one_save_post_offer($offer) {
     $post_args = array(
         'ID' => $post_id,
         'post_title' => $offer->name,
-        'post_content' => $post_content,
+        'post_content' => $product_description,
         'post_excerpt' => $offer->product_description,
         'post_status' => 'publish'
     );
     
-    $get_template = get_post(8);
+    $get_template = get_post(get_option('affiliate_one_template'));
     if ( is_a($get_template, 'WP_Post') ) {
         $post_args['post_content'] = $get_template->post_content;
+    }
+    
+    if ( $post_id ) {
+        unset($post_args['post_content']);
+    }
+
+    if ( empty($post_args['post_content']) ) {
+        $post_args['post_content'] = '';
     }
     
     $post_id = wp_insert_post($post_args);    

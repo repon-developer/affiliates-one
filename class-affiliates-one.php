@@ -7,7 +7,7 @@ class AffiliatesOne {
         $this->load();
 
         add_action( 'admin_enqueue_scripts', array($this, 'admin_enqueue_scripts' ));
-        add_action( 'admin_menu', [$this, 'register_admin_menu_page']);
+        add_action( 'admin_menu', [$this, 'register_admin_menu_page'], 22);
     }
 
     public static function get_instance() {
@@ -21,6 +21,9 @@ class AffiliatesOne {
     function load() {
         require_once AO_DIR . 'cores.php';
         new AffiliatesOne_Core();
+
+        require_once AO_DIR . 'settings.php';
+        new AffiliatesOne_Settings();
         
         require_once AO_DIR . 'cron.php';
         new AffiliatesOne_Cron();
@@ -33,7 +36,8 @@ class AffiliatesOne {
     }
 
     function admin_enqueue_scripts($hook) {
-        if ( 'toplevel_page_affiliates-one-offers' == $hook || 'affiliates-one_page_affiliates-one-logs' == $hook ) {
+        $our_pages = ['toplevel_page_affiliates-one-offers', 'affiliates-one_page_affiliates-one-settings', 'affiliates-one_page_affiliates-one-logs'];
+        if ( in_array($hook, $our_pages) ) {
             wp_enqueue_style( 'affiliates-one', AO_URI . 'assets/affiliates-one.css', false, '1.0.1' );
         }
     }
