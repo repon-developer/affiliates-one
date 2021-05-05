@@ -186,6 +186,10 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
             $offer->post_id = $exist;
         });
 
+        usort($offers, function($a, $b) {
+            return $b->id - $a->id;
+        });
+
         $_SESSION['affiliates_one_offers'] = $offers;        
         
         return $offers;
