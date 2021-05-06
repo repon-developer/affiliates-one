@@ -69,6 +69,7 @@ function affiliates_one_save_post_offer($offer) {
     $get_template = get_post(get_option('affiliates_one_template'));
 
     if ( is_a($get_template, 'WP_Post') ) {
+        $post_args['post_title'] = str_replace('[offer_title]', $offer->name, $get_template->post_title );
         $post_args['post_content'] = $get_template->post_content;
     }
     
@@ -200,5 +201,3 @@ function affiliates_one_logs($line, $end = false) {
     fwrite($fp, implode("\r\n", $logs)); 
     fclose($fp);
 }
-
-

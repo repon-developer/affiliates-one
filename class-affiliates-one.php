@@ -89,6 +89,7 @@ class AffiliatesOne {
     function act_load_template($temp_post) {
         $title = get_the_title( $temp_post['ID'] );
         $temp_post['post_title'] = str_replace('[offer_title]', $title, $temp_post['post_title'] );
+        $temp_post['post_status'] = 'publish';
         return $temp_post;
     }
 }
