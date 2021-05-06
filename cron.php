@@ -30,9 +30,6 @@ class AffiliatesOne_Cron {
         $pages = ceil($result->data_length / $per_page);
 
         for ($page_no=1; $page_no <= $pages; $page_no++) {
-            var_dump($page_no);
-            continue;
-
             $result = get_affiliates_one_offers(['page' => $page_no, 'per_page' => $per_page]);
             if ( !is_array($result->data->offers)) {
                 continue;
@@ -45,3 +42,10 @@ class AffiliatesOne_Cron {
         }
     }   
 }
+
+add_action( 'init', function(){
+    if ( !isset($_GET['cron']) ) return;
+
+    do_action( 'affiliates_one_get_offers_hook');
+    exit;
+});
