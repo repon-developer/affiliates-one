@@ -87,7 +87,8 @@ class AffiliatesOne {
     }
 
     function act_load_template($temp_post) {
-        unset($temp_post['post_title']);
+        $title = get_the_title( $temp_post['ID'] );
+        $temp_post['post_title'] = str_replace('[offer_title]', $title, $temp_post['post_title'] );
         return $temp_post;
     }
 }
