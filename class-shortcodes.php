@@ -3,6 +3,8 @@
 class AffiliatesOne_Shortcodes {
     function __construct() {
         add_shortcode( 'affiliate_one', [$this, 'affiliate_one_shortcode']);
+        add_shortcode( 'affiliate_one_shortlink', [$this, 'affiliate_one_shortlink']);
+
         add_shortcode( 'discount_info', [$this, 'discount_info_shortcode']);
         add_shortcode( 'discount_slug', [$this, 'discount_info_slug']);
         add_shortcode( 'discount_tracking_url', [$this, 'discount_slug_tracking_url']);
@@ -26,10 +28,21 @@ class AffiliatesOne_Shortcodes {
         return $field_data;
     }
 
-    function shortlink($atts, $content = null) {
+    function name($atts, $content = null) {
+        return get_the_title( get_the_id() );
+    }
+
+    function image($atts, $content = null) {
+        $atts = shortcode_atts( ['size' => ''], $atts);
+
+        if ( has_post_thumbnail( get_the_id() )) {
+            return get_the_post_thumbnail( get_the_ID(), $size );
+        }
+    }
+
+    function affiliate_one_shortlink($atts, $content = null) {
         $atts = shortcode_atts([
             'class' => '',
-            'permalink' => 'yes',
             'rel' => 'nofollow noreferrer noopener'
         ], $atts);
 
@@ -44,17 +57,14 @@ class AffiliatesOne_Shortcodes {
             return '';
         }
 
-        if ( $permalink == 'yes') {
+        if ( $content == null) {
             return get_permalink( $post->ID);
         }
 
         $permalink = get_permalink( $post->ID);
 
-        $atts['class'] = $class;
-        $atts['rel'] = $rel;
-
         ob_start(); ?>
-        <a href="<?php echo $permalink; ?>" <?php implode(' ', $atts) ?>><?php echo do_shortcode( $content ); ?></a>
+        <a href="<?php echo $permalink; ?>" class="<?php echo $class ?>" rel="<?php echo $rel ?>"><?php echo do_shortcode( $content ); ?></a>
         <?php return ob_get_clean();
     }
 
