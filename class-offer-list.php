@@ -16,6 +16,8 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
         }
         
         if ( $_POST['filter_action'] != 'Filter') return;
+
+        $_SESSION['category-group'] = $_POST['category-group'];
         
         $permalink = add_query_arg( 'category-group', $_POST['category-group']);
         if ( empty($_POST['category-group'])) {
