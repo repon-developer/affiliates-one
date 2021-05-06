@@ -87,7 +87,7 @@ function affiliates_one_save_post_offer($offer) {
     require_once(ABSPATH . 'wp-admin/includes/taxonomy.php'); 
 
     $terms = array_map(function($category){
-        $term = wp_create_term(trim($category), 'category');
+        $term = wp_create_term(trim($category));
         return is_integer($term) ? $term : $term['term_id'];        
     }, $offer->categories);
     

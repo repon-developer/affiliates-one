@@ -10,6 +10,8 @@ class AffiliatesOne {
         add_filter( 'cron_schedules', array($this, 'affiliates_one_cron_schedule'));
         add_action( 'admin_enqueue_scripts', array($this, 'admin_enqueue_scripts' ));
         add_action( 'admin_menu', [$this, 'register_admin_menu_page'], 22);
+
+        add_filter('act_load_template', array($this, 'act_load_template'));
     }
 
     public static function get_instance() {
@@ -82,5 +84,10 @@ class AffiliatesOne {
             echo '</div>';
 
         echo '</div>';
+    }
+
+    function act_load_template($temp_post) {
+        unset($temp_post['post_title']);
+        return $temp_post;
     }
 }
