@@ -29,7 +29,7 @@ class AffiliatesOne_Shortcodes {
     }
 
     function name($atts, $content = null) {
-        return get_the_title( get_the_id() );
+        return get_post_meta( get_the_id(), 'offer_name', true);
     }
 
     function image($atts, $content = null) {
@@ -64,7 +64,7 @@ class AffiliatesOne_Shortcodes {
         $permalink = get_permalink( $post->ID);
 
         ob_start(); ?>
-        <a href="<?php echo $permalink; ?>" class="<?php echo $class ?>" rel="<?php echo $rel ?>"><?php echo do_shortcode( $content ); ?></a>
+        <a target="_blank" href="<?php echo $permalink; ?>" class="<?php echo $class ?>" rel="<?php echo $rel ?>"><?php echo do_shortcode( $content ); ?></a>
         <?php return ob_get_clean();
     }
 
@@ -142,6 +142,10 @@ class AffiliatesOne_Shortcodes {
     }
 
     function discount_slug_tracking_url($atts, $content = null) {
+        $atts = shortcode_atts([
+            'rel' => 'nofollow noreferrer noopener'
+        ], $atts);
+
         $info = wp_cache_get('discount_info');
 
         if ( !is_object($info) || empty($info->tracking_url)) return '';
@@ -160,7 +164,7 @@ class AffiliatesOne_Shortcodes {
         }
 
         $offer_permalink = get_permalink( $link_post);
-        return sprintf('<a href="%s">%s</a>', $offer_permalink, do_shortcode( $content ));
+        return sprintf('<a target="_blank" href="%1$s" rel="%2$s">%3$s</a>', $offer_permalink, $atts['rel'], do_shortcode( $content ));
     }
 }
 

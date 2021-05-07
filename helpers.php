@@ -96,6 +96,7 @@ function affiliates_one_save_post_offer($offer) {
     wp_set_post_terms($post_id, $offer->categories, 'post_tag' );
 
     update_post_meta( $post_id, 'affiliates_one_offer', $offer->id);
+    update_post_meta( $post_id, 'offer_name', $offer->name);
     update_post_meta( $post_id, 'short_description', $offer->short_description);
     update_post_meta( $post_id, 'brand_background', $offer->brand_background);
     update_post_meta( $post_id, 'product_description', $offer->product_description);
