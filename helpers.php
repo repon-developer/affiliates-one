@@ -38,7 +38,7 @@ function get_affiliates_one_offers($query_args = []) {
     $api_key = get_option( 'affiliates_one_api_key');
     
     $query_args = wp_parse_args( $query_args, [
-    //    'locale' =>'zh-TW', 
+        'locale' =>'zh-TW', 
         'api_key' => $api_key
     ]);
     
@@ -90,10 +90,10 @@ function affiliates_one_save_post_offer($offer) {
         $category = get_affiliatesone_category_groups()[$category_group];
         $term = wp_create_term( $category, 'category');
 
-        wp_set_post_categories($post_id, $term);
+        wp_set_post_categories($post_id, $term, true);
     }
 
-    wp_set_post_terms($post_id, $offer->categories, 'post_tag' );
+    wp_set_object_terms($post_id, $offer->categories, 'category', true );
 
     update_post_meta( $post_id, 'affiliates_one_offer', $offer->id);
     update_post_meta( $post_id, 'offer_name', $offer->name);
