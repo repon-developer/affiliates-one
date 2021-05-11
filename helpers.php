@@ -89,11 +89,11 @@ function affiliates_one_save_post_offer($offer) {
     if ($category_group = $_SESSION['category-group']) {
         $category = get_affiliatesone_category_groups()[$category_group];
         $term = wp_create_term( $category, 'category');
-
-        wp_set_post_categories($post_id, $term, true);
+        wp_set_post_categories($post_id, $term);
     }
 
     wp_set_object_terms($post_id, $offer->categories, 'category', true );
+    wp_remove_object_terms($post_id, 'uncategorized', 'category');
 
     update_post_meta( $post_id, 'affiliates_one_offer', $offer->id);
     update_post_meta( $post_id, 'offer_name', $offer->name);
