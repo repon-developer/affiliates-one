@@ -47,6 +47,30 @@ function get_affiliates_one_offers($query_args = []) {
     return json_decode($response);
 }
 
+function affiliates_one_create_short_link($tracking_url, $post_slug) {
+    if (!filter_var($tracking_url, FILTER_VALIDATE_URL)) {
+        return false;
+    }
+
+    global $wpdb;
+
+    $short_link_id = $wpdb->get_var("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = 'offer_url' AND meta_value = '$tracking_url'");
+
+    $short_link_id = wp_insert_post([
+        'ID' => $short_link_id, 
+        'post_title' => $post_slug, 
+        'post_type' => 'short_link', 
+        'post_status' => 'publish'
+    ]);
+    
+    if ( $short_link_id ) {
+        update_post_meta( $short_link_id, 'offer_url', $tracking_url);
+        return $short_link_id;
+    }
+
+    return false;
+}
+
 function affiliates_one_save_post_offer($offer) {
     if ( !is_object($offer) ) return false; 
     affiliates_one_logs(sprintf("Saving offer - %s (%s)", $offer->name, $offer->id));
@@ -104,18 +128,9 @@ function affiliates_one_save_post_offer($offer) {
     if ( $offer->default_tracking_url ) {
         affiliates_one_logs(sprintf("Add tracking URL %s for this offer %s (%s)", $offer->default_tracking_url, $offer->name, $offer->id));
 
-        $short_link_id = $wpdb->get_var("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = 'offer_url' AND meta_value = '$offer->default_tracking_url'");
-
-        $short_link_id = wp_insert_post([
-            'ID' => $short_link_id, 
-            'post_title' => $offer->id, 
-            'post_type' => 'short_link', 
-            'post_status' => 'publish'
-        ]);
-        
+        $short_link_id = affiliates_one_create_short_link($offer->default_tracking_url, $offer->id);        
         if ( $short_link_id ) {
             update_post_meta( $post_id, 'tracking_short_link', $short_link_id);
-            update_post_meta( $short_link_id, 'offer_url', $offer->default_tracking_url);
         }
     }
     
@@ -186,7 +201,13 @@ function affiliatesone_get_creatives($offer_id) {
     $response = @file_get_contents(add_query_arg($query_arg, 'https://api.affiliates.com.tw/api/v1/affiliates/creatives.json'));
 
     $result = json_decode($response);
-    return is_array($result->data->creatives) ? $result->data->creatives : [];
+    $creatives = is_array($result->data->creatives) ? $result->data->creatives : [];
+
+    foreach ($creatives as $creative) {
+        affiliates_one_create_short_link($creative->tracking_url, $creative->id);
+    }
+
+    return $creatives;
 }
 
 function affiliates_one_logs($line, $end = false) {

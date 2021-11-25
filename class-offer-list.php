@@ -291,7 +291,7 @@ class AffiliatesOne_Offer_page {
         }
 
         add_filter( 'set-screen-option', [ __CLASS__, 'set_screen' ], 10, 3 );
-        add_action( 'admin_menu', array($this, 'register_admin_menu_page' ));         
+        add_action( 'admin_menu', array($this, 'register_admin_menu_page' ));
     }
 
     public static function set_screen( $status, $option, $value ) {
