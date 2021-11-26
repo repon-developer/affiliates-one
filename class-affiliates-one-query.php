@@ -3,24 +3,12 @@
 class AffiliatesOne_Query {
 
     public static function get_offer($offer_id) {
-        $get_offers = get_transient('affiliates_one_offers');
-        if ( !is_array($get_offers) ) {
+        $current_offer = get_option('affiliates_one_offer_' . $offer_id);
+        if ( !is_object($current_offer)) {
             return false;
         }
 
-        $current_offer = array_filter($get_offers, function($item) use($offer_id) {
-            return $item->id == $offer_id;
-        });
-
-        if ( empty($current_offer)) {
-            return false;
-        }
-
-        $current_offer = current($current_offer);
-
-        //return $current_offer;
-
-        return (object) array_merge((array)$current_offer, ['creatives' => affiliatesone_get_creatives($current_offer->id)]);
+        return (object) array_merge((array)$current_offer, ['creatives' => affiliatesone_get_creatives($offer_id)]);
     }
 
     public static function save_creative($creative) {

@@ -206,8 +206,6 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
         });
 
         $_SESSION['affiliates_one_offers'] = $offers;
-
-        set_transient( 'affiliates_one_offers', $offers, AO_TRANSIENT_TIME);
         
         return $offers;
     }
@@ -278,16 +276,8 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
             'import' => $offer->id,
             '_nonce' => wp_create_nonce( 'import-creatives' )
         ]);
-
-        $has_creative = AffiliatesOne_Query::has_creative($offer->id);
-
-        if ( !$has_creative ) {
-            echo 'No creatives';
-            return;
-        }
         
-        printf('<a class="button button-primary" href="%s">%s</a>', $permalink, __('Import Creatives', 'affiliates-one') );
-        
+        printf('<a class="button button-primary" href="%s">%s</a>', $permalink, __('Import Creatives', 'affiliates-one') );        
     }
 }
 
@@ -351,6 +341,8 @@ class AffiliatesOne_Offer_page {
 
                 <a href="<?php echo $auto_post_link; ?>" class="button button-primary button-auto-post">Auto Post - <?php echo $button_text; ?></a>
             </div>
+
+            <hr class="wp-header-end">
 
             <form method="post">
                 <?php wp_nonce_field('_affiliate_one_overview', 'affiliate_one_overview'); ?>

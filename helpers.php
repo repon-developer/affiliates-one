@@ -57,18 +57,16 @@ function get_affiliates_one_offers($query_args = []) {
 
     $response = @file_get_contents(add_query_arg($query_args, 'https://api.affiliates.com.tw/api/v1/affiliates/offers.json'));
 
-    error_log(add_query_arg($query_args, 'https://api.affiliates.com.tw/api/v1/affiliates/offers.json'));
+    $result = json_decode($response);  
     
-    $result = json_decode($response);
-    if ( !is_array($result->data->offers)) {
-        return [];
-    }
-
-    foreach ($result->data->offers as $offer) {
-        //$creatives = affiliatesone_get_creatives($offer->id);
+    if(is_array($result->data->offers)) {
+        array_walk($result->data->offers, function(&$offer){
+            update_option( 'affiliates_one_offer_' . $offer->id, $offer);
+            $offer->creatives = AffiliatesOne_Query::get_creatives($offer->id);
+        });
     }
     
-    return $result;    
+    return $result;
 }
 
 function affiliates_one_create_short_link($tracking_url, $post_slug) {

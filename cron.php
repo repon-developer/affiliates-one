@@ -21,27 +21,24 @@ class AffiliatesOne_Cron {
     }
 
     function get_offers_hook_callback() {
-        $result = get_affiliates_one_offers(['per_page' => 1]);
-        if ( !is_object($result) ) {
+        $get_last_page = get_option('affiliates_one_last_page', 0);
+        $current_page = absint( $get_last_page ) + 1;
+
+        $result = get_affiliates_one_offers(['page' => $current_page, 'browse_statuses' => 'Active', 'per_page' => AFFILIATES_ONE_PER_PAGE]);
+        var_dump($result->data->offers);
+        if ( !is_array($result->data->offers)) {
             return;
         }
 
-        $pages = ceil($result->data_length / AFFILIATES_ONE_PER_PAGE);
-        $pages = 1;
+        if ( ( $current_page * AFFILIATES_ONE_PER_PAGE ) > $result->data_length ) {
+            $current_page = 0;
+        }
 
-        for ($page_no=1; $page_no <= $pages; $page_no++) {
-            $result = get_affiliates_one_offers(['page' => $page_no, 'per_page' => AFFILIATES_ONE_PER_PAGE]);
-
-            if ( !is_array($result->data->offers)) {
-                continue;
-            }
-            
-            
-            while ($offer = current($result->data->offers)) {
-                next($result->data->offers);
-                update_option( 'affiliates_one_offer_' . $offer->id, $offer);
-                //AffiliatesOne_Query::save_creatives($offer->id);
-            }
+        update_option( 'affiliates_one_last_page', $current_page);
+        
+        while ($offer = current($result->data->offers)) {
+            next($result->data->offers);
+            AffiliatesOne_Query::save_creatives($offer->id);
         }
     }   
 }
@@ -58,7 +55,7 @@ add_action( 'init', function(){
     
     global $wpdb;
 
-    $result = $wpdb->get_results("SELECT * FROM $wpdb->options WHERE `option_name` LIKE '%affiliates_one_offer_%'");
+    $result = $wpdb->get_results("SELECT * FROM $wpdb->options WHERE `option_name` LIKE '%ffiliates_one_offer_%'");
     
 
     var_dump('<pre>', $result);
