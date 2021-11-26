@@ -78,7 +78,7 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
         
         AffiliatesOne_Query::save_creatives(@$_REQUEST['import']);
         
-        $permalink = remove_query_arg( ['import-creatives', '_nonce']);
+        $permalink = remove_query_arg( ['import', '_nonce']);
         exit(wp_safe_redirect( $permalink ));
     }
 
@@ -205,7 +205,9 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
             return $b->id - $a->id;
         });
 
-        $_SESSION['affiliates_one_offers'] = $offers;        
+        $_SESSION['affiliates_one_offers'] = $offers;
+
+        set_transient( 'affiliates_one_offers', $offers, AO_TRANSIENT_TIME);
         
         return $offers;
     }
@@ -276,6 +278,13 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
             'import' => $offer->id,
             '_nonce' => wp_create_nonce( 'import-creatives' )
         ]);
+
+        $has_creative = AffiliatesOne_Query::has_creative($offer->id);
+
+        if ( !$has_creative ) {
+            echo 'No creatives';
+            return;
+        }
         
         printf('<a class="button button-primary" href="%s">%s</a>', $permalink, __('Import Creatives', 'affiliates-one') );
         

@@ -35,9 +35,11 @@ class AffiliatesOne_Cron {
                 continue;
             }
 
+            set_transient( 'affiliates_one_offers', $result->data->offers, AO_TRANSIENT_TIME);
+
             while ($offer = current($result->data->offers)) {
                 next($result->data->offers);
-                affiliates_one_save_post_offer($offer);
+                AffiliatesOne_Query::save_creatives($offer->id);
             }
         }
     }   
