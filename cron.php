@@ -25,42 +25,45 @@ class AffiliatesOne_Cron {
         if ( !is_object($result) ) {
             return;
         }
-        
-        $per_page = 12;
-        $pages = ceil($result->data_length / $per_page);
+
+        $pages = ceil($result->data_length / AFFILIATES_ONE_PER_PAGE);
+        $pages = 1;
 
         for ($page_no=1; $page_no <= $pages; $page_no++) {
-            $result = get_affiliates_one_offers(['page' => $page_no, 'per_page' => $per_page]);
+            $result = get_affiliates_one_offers(['page' => $page_no, 'per_page' => AFFILIATES_ONE_PER_PAGE]);
+
             if ( !is_array($result->data->offers)) {
                 continue;
             }
-
-            set_transient( 'affiliates_one_offers', $result->data->offers, AO_TRANSIENT_TIME);
-
+            
+            
             while ($offer = current($result->data->offers)) {
                 next($result->data->offers);
-                AffiliatesOne_Query::save_creatives($offer->id);
+                update_option( 'affiliates_one_offer_' . $offer->id, $offer);
+                //AffiliatesOne_Query::save_creatives($offer->id);
             }
         }
     }   
 }
 
-// add_action( 'init', function(){
-//     if ( !isset($_GET['cron']) ) return;
-
-//     do_action( 'affiliates_one_get_offers_hook');
-//     exit;
-// });
-
-
 add_action( 'init', function(){
     if ( !isset($_GET['cron']) ) return;
+    do_action( 'affiliates_one_get_offers_hook');
+    exit;
+});
+
+add_action( 'init', function(){
+    if ( !isset($_GET['cron_s']) ) return;
 
     
-    $creatives = affiliatesone_get_creatives(3080);
+    global $wpdb;
 
-    var_dump($creatives);
+    $result = $wpdb->get_results("SELECT * FROM $wpdb->options WHERE `option_name` LIKE '%affiliates_one_offer_%'");
     
+
+    var_dump('<pre>', $result);
+
+
 
     exit;
 });

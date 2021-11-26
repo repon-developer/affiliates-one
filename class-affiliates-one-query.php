@@ -12,11 +12,13 @@ class AffiliatesOne_Query {
             return $item->id == $offer_id;
         });
 
-        if ( !$current_offer ) {
+        if ( empty($current_offer)) {
             return false;
         }
 
         $current_offer = current($current_offer);
+
+        //return $current_offer;
 
         return (object) array_merge((array)$current_offer, ['creatives' => affiliatesone_get_creatives($current_offer->id)]);
     }

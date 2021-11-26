@@ -34,17 +34,41 @@ function get_affiliatesone_category_groups() {
     ];
 }
 
+function affiliatesone_get_creatives($offer_id) {
+    $api_key = get_option( 'affiliates_one_api_key');
+
+    $query_arg = [
+        'locale' => AO_LOCALE,        
+        'offer_id' => $offer_id,
+        'creative_type' => 'feed',
+        'api_key' => $api_key
+    ];
+    
+    $response = @file_get_contents(add_query_arg($query_arg, 'https://api.affiliates.com.tw/api/v1/affiliates/creatives.json'));
+
+    $result = json_decode($response);
+    return is_array($result->data->creatives) ? $result->data->creatives : [];
+}
+
 function get_affiliates_one_offers($query_args = []) {
     $api_key = get_option( 'affiliates_one_api_key');
     
-    $query_args = wp_parse_args( $query_args, [
-        'locale' => AO_LOCALE, 
-        'api_key' => $api_key
-    ]);
-    
+    $query_args = wp_parse_args( $query_args, ['locale' => AO_LOCALE, 'api_key' => $api_key]);
 
     $response = @file_get_contents(add_query_arg($query_args, 'https://api.affiliates.com.tw/api/v1/affiliates/offers.json'));
-    return json_decode($response);
+
+    error_log(add_query_arg($query_args, 'https://api.affiliates.com.tw/api/v1/affiliates/offers.json'));
+    
+    $result = json_decode($response);
+    if ( !is_array($result->data->offers)) {
+        return [];
+    }
+
+    foreach ($result->data->offers as $offer) {
+        //$creatives = affiliatesone_get_creatives($offer->id);
+    }
+    
+    return $result;    
 }
 
 function affiliates_one_create_short_link($tracking_url, $post_slug) {
@@ -134,9 +158,14 @@ function affiliates_one_save_post_offer($offer) {
         }
     }
     
-    $creatives = affiliatesone_get_creatives($offer->id);
+    $creatives = AffiliatesOne_Query::get_creatives($offer->id);
+
     if ( count($creatives) > 0 ) {
         update_post_meta( $post_id, 'discount_info', $creatives);
+        foreach ($creatives as $creative) {
+            AffiliatesOne_Query::save_creative($creative);
+            affiliates_one_create_short_link($creative->tracking_url, $creative->id);
+        }
     } else {
         affiliates_one_logs(sprintf("Creative data is not available for offer %s (%s)", $offer->name, $offer->id));
     }
@@ -186,28 +215,6 @@ function affiliatesone_image_upload($image_url, $offer = null) {
     wp_update_attachment_metadata( $attach_id, $attach_data );
 
     return $attach_id;
-}
-
-function affiliatesone_get_creatives($offer_id) {
-    $api_key = get_option( 'affiliates_one_api_key');
-
-    $query_arg = [
-        'locale' => AO_LOCALE,        
-        'offer_id' => $offer_id,
-        'creative_type' => 'feed',
-        'api_key' => $api_key
-    ];
-    
-    $response = @file_get_contents(add_query_arg($query_arg, 'https://api.affiliates.com.tw/api/v1/affiliates/creatives.json'));
-
-    $result = json_decode($response);
-    $creatives = is_array($result->data->creatives) ? $result->data->creatives : [];
-
-    foreach ($creatives as $creative) {
-        affiliates_one_create_short_link($creative->tracking_url, $creative->id);
-    }
-
-    return $creatives;
 }
 
 function affiliates_one_logs($line, $end = false) {

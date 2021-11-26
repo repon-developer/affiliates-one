@@ -221,7 +221,7 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
         
         $columns = $this->get_columns();
         
-        $per_page = $this->get_items_per_page( 'offers_per_page', 15 );
+        $per_page = $this->get_items_per_page( 'offers_per_page', AFFILIATES_ONE_PER_PAGE );
         $current_page = $this->get_pagenum();
 
         $this->items = $this->get_offers($current_page, $per_page);
