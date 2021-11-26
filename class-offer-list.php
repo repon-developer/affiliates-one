@@ -71,6 +71,19 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
         flush_rewrite_rules();
     }
 
+    function import_creatives() {
+        if (!wp_verify_nonce( $_REQUEST['_nonce'], 'import-creatives')) {
+            return;
+        }
+        
+        AffiliatesOne_Query::save_creatives(@$_REQUEST['import']);
+        
+        $permalink = remove_query_arg( ['import-creatives', '_nonce']);
+        exit(wp_safe_redirect( $permalink ));
+    }
+
+    
+
     function handle_action() {
         if ( wp_verify_nonce( $_REQUEST['_nonce_autopost'], 'nonce_autopost') ) {
             $auto_post_active = get_option( 'affiliates_one_autopost', false);
@@ -200,6 +213,7 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
     
     public function prepare_items() {
         $this->process_bulk_action();
+        $this->import_creatives();
         $this->handle_action();
 
         
@@ -224,7 +238,7 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
             'categories'    => __('Categories', 'affiliates-one'),
             'flags'         => __('Countries', 'affiliates-one'),
             'status'        => __('Status', 'affiliates-one'),
-            'published'     => __('Publish Status', 'affiliates-one')
+            'action'     => __('Action', 'affiliates-one')
         );
 
         return $columns;
@@ -236,7 +250,6 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
             case 'name_id':
             case 'flags':
             case 'status':
-            case 'published':
                 return $item->$column_name;
                             
             case 'categories':
@@ -258,24 +271,13 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
         
     }
 
-    function column_published( $offer ) {
+    function column_action( $offer ) {
         $permalink = add_query_arg([
-            'publish-offer' => $offer->id,
-            '_nonce' => wp_create_nonce( 'publish-offer' )
+            'import' => $offer->id,
+            '_nonce' => wp_create_nonce( 'import-creatives' )
         ]);
-
-        if ( $offer->published ) {
-            //_e('Published', 'affiliates-one');
-            //printf('<a class="button button-primary" href="%s">%s</a>', $permalink, __('Publish again - (Remove later)', 'affiliates-one') );
-            
-            if ( $post_permalink = get_permalink( $offer->post_id) ) {
-                printf('<a target="_blank" class="button button-primary" href="%s">%s</a>', $post_permalink, __('View Post', 'affiliates-one') );
-            }
-            return;
-        }
         
-        printf('<a class="button button-primary" href="%s">%s</a>', $permalink, __('Publish', 'affiliates-one') );
-
+        printf('<a class="button button-primary" href="%s">%s</a>', $permalink, __('Import Creatives', 'affiliates-one') );
         
     }
 }

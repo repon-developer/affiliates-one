@@ -20,6 +20,10 @@ define('AO_DIR', plugin_dir_path( __FILE__ ) );
 
 define('AO_URI', plugin_dir_url( __FILE__ ) );
 
+//define('AO_LOCALE', 'zh-TW');
+define('AO_LOCALE', 'en-US');
+
 require_once AO_DIR . 'helpers.php';
 require_once AO_DIR . 'class-affiliates-one.php';
+require_once AO_DIR . 'class-affiliates-one-query.php';
 $GLOBALS['affiliates_one'] = new AffiliatesOne();

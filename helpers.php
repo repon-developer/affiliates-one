@@ -38,7 +38,7 @@ function get_affiliates_one_offers($query_args = []) {
     $api_key = get_option( 'affiliates_one_api_key');
     
     $query_args = wp_parse_args( $query_args, [
-        'locale' =>'zh-TW', 
+        'locale' => AO_LOCALE, 
         'api_key' => $api_key
     ]);
     
@@ -192,7 +192,7 @@ function affiliatesone_get_creatives($offer_id) {
     $api_key = get_option( 'affiliates_one_api_key');
 
     $query_arg = [
-        'locale' => 'zh-TW',        
+        'locale' => AO_LOCALE,        
         'offer_id' => $offer_id,
         'creative_type' => 'feed',
         'api_key' => $api_key

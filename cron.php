@@ -43,9 +43,22 @@ class AffiliatesOne_Cron {
     }   
 }
 
+// add_action( 'init', function(){
+//     if ( !isset($_GET['cron']) ) return;
+
+//     do_action( 'affiliates_one_get_offers_hook');
+//     exit;
+// });
+
+
 add_action( 'init', function(){
     if ( !isset($_GET['cron']) ) return;
 
-    do_action( 'affiliates_one_get_offers_hook');
+    
+    $creatives = affiliatesone_get_creatives(3080);
+
+    var_dump($creatives);
+    
+
     exit;
 });
