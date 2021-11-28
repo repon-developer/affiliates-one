@@ -19,7 +19,7 @@ define('AO_VERSION', '1.0.1');
 define('AO_DIR', plugin_dir_path( __FILE__ ) );
 
 define('AO_URI', plugin_dir_url( __FILE__ ) );
-define('AFFILIATES_ONE_PER_PAGE', 50);
+define('AFFILIATES_ONE_PER_PAGE', 1500);
 define('AO_TRANSIENT_TIME', 86400);
 
 //define('AO_LOCALE', 'zh-TW');

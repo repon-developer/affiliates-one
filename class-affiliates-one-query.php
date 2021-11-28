@@ -38,7 +38,7 @@ class AffiliatesOne_Query {
         $get_template = get_post(get_option('affiliates_one_template'));
 
         if ( is_a($get_template, 'WP_Post') ) {
-            $post_args['post_title'] = str_replace('[offer_title]', $creative->offer_name, $get_template->post_title );
+            //$post_args['post_title'] = str_replace('[offer_title]', $creative->offer_name, $get_template->post_title );
             $post_args['post_content'] = $get_template->post_content;
         }
     
@@ -54,13 +54,19 @@ class AffiliatesOne_Query {
         if ( !$post_id ) return false;
         
         update_post_meta( $post_id, 'affiliates_one_creative_id', $creative->id);
-        update_post_meta( $post_id, 'content', $post_content);
+
+        update_post_meta( $post_id, 'content', $creative->content);
+
         update_post_meta( $post_id, 'promo_text_1', $creative->promo_text_1);
         update_post_meta( $post_id, 'promo_text_2', $creative->promo_text_2);
         update_post_meta( $post_id, 'button_text', $creative->button_text);
         update_post_meta( $post_id, 'coupon_code', $creative->coupon_code);
         update_post_meta( $post_id, 'original_price', $creative->original_price);
         update_post_meta( $post_id, 'discount_price', $creative->discount_price);
+        
+        update_post_meta( $post_id, 'active_date_start', $creative->active_date_start);
+        update_post_meta( $post_id, 'active_date_end', $creative->active_date_end);
+        
 
         $short_link_id = affiliates_one_create_short_link($creative->tracking_url, $creative->id);
         if ( $short_link_id ) {

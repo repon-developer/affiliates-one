@@ -184,14 +184,29 @@ class AffiliatesOne_Creative_Shortcodes {
             return;
         }
 
+        if ( $field == 'start_date' ) {
+            return $this->creative_date_field('active_date_start');
+        }
+
+        if ( $field == 'end_date' ) {
+            return $this->creative_date_field('active_date_end');
+        }
+
         return get_post_meta( get_the_id(), $field, true);
+    }
+
+    function creative_date_field($meta_key) {
+        $date = get_post_meta( get_the_id(), $meta_key, true);
+        if ( !empty($date)) {
+            return date(get_option( 'date_format'), strtotime($date));
+        }
     }
 
     public function creative_image_shortcode($atts) {
         if ( has_post_thumbnail()) {
             return get_the_post_thumbnail(get_the_ID(), 'full');
         }
-    }    
+    }   
 
     function creative_shortlink($atts, $content = null) {
         $atts = shortcode_atts([
