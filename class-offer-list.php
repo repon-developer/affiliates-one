@@ -69,20 +69,7 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
             affiliates_one_save_post_offer(current($offer_items));
         }
         flush_rewrite_rules();
-    }
-
-    function import_creatives() {
-        if (!wp_verify_nonce( $_REQUEST['_nonce'], 'import-creatives')) {
-            return;
-        }
-        
-        AffiliatesOne_Query::save_creatives(@$_REQUEST['import']);
-        
-        $permalink = remove_query_arg( ['import', '_nonce']);
-        exit(wp_safe_redirect( $permalink ));
-    }
-
-    
+    }    
 
     function handle_action() {
         if ( wp_verify_nonce( $_REQUEST['_nonce_autopost'], 'nonce_autopost') ) {
@@ -144,7 +131,6 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
 
     function get_offers($current_page = 1, $per_page = 15) {
         global $wpdb;
-        return [];
 
         $query_arg = [
             'page' => $current_page,
@@ -294,6 +280,19 @@ class AffiliatesOne_Offer_page {
 
         add_filter( 'set-screen-option', [ __CLASS__, 'set_screen' ], 10, 3 );
         add_action( 'admin_menu', array($this, 'register_admin_menu_page' ));
+
+        add_action( 'init', [$this, 'import_creatives' ]);
+    }
+
+    function import_creatives() {
+        if (!wp_verify_nonce( $_REQUEST['_nonce'], 'import-creatives')) {
+            return;
+        }
+        
+        AffiliatesOne_Query::save_creatives(@$_REQUEST['import']);
+        
+        $permalink = remove_query_arg( ['import', '_nonce']);
+        exit(wp_safe_redirect( $permalink ));
     }
 
     public static function set_screen( $status, $option, $value ) {

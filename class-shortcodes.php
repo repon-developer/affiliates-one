@@ -171,6 +171,7 @@ class AffiliatesOne_Shortcodes {
 class AffiliatesOne_Creative_Shortcodes {
     function __construct() {
         add_shortcode( 'creative_field', [$this, 'creative_field_shortcode']);
+        add_shortcode( 'creative_image', [$this, 'creative_image_shortcode']);
         add_shortcode( 'creative_shortlink', [$this, 'creative_shortlink']);
     }
 
@@ -185,6 +186,12 @@ class AffiliatesOne_Creative_Shortcodes {
 
         return get_post_meta( get_the_id(), $field, true);
     }
+
+    public function creative_image_shortcode($atts) {
+        if ( has_post_thumbnail()) {
+            return get_the_post_thumbnail(get_the_ID(), 'full');
+        }
+    }    
 
     function creative_shortlink($atts, $content = null) {
         $atts = shortcode_atts([

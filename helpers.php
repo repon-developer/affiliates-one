@@ -60,11 +60,16 @@ function affiliatesone_get_creatives($offer_id) {
 function get_affiliates_one_offers($query_args = []) {
     $api_key = get_option( 'affiliates_one_api_key');
     
-    $query_args = wp_parse_args( $query_args, ['locale' => AO_LOCALE, 'api_key' => $api_key]);
+    $query_args = wp_parse_args( $query_args, ['locale' => AO_LOCALE, 'api_key' => $api_key, 'browse_statuses' => 'Active']);
 
-    $response = @file_get_contents(add_query_arg($query_args, 'https://api.affiliates.com.tw/api/v1/affiliates/offers.json'));
+    $curl = curl_init(add_query_arg($query_args, 'https://api.affiliates.com.tw/api/v1/affiliates/offers.json'));
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    $response = curl_exec($curl);
+    curl_close($curl);
 
-    $result = json_decode($response);  
+    $result = json_decode($response); 
     
     if(is_array($result->data->offers)) {
         array_walk($result->data->offers, function(&$offer){
