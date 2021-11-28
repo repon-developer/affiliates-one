@@ -38,8 +38,10 @@ class AffiliatesOne_Query {
         $get_template = get_post(get_option('affiliates_one_template'));
 
         if ( is_a($get_template, 'WP_Post') ) {
-            $post_args['post_title'] = str_replace('[offer_title]', $creative->title, $get_template->post_title );
             $post_args['post_content'] = $get_template->post_content;
+
+            $post_args['post_title'] = str_replace('[offer_name]', $creative->offer_name, $get_template->post_title );
+            $post_args['post_title'] = str_replace('[title]', $creative->title, $post_args['post_title']);
         }
     
         $post_id = wp_insert_post($post_args); 
@@ -60,6 +62,9 @@ class AffiliatesOne_Query {
         
         update_post_meta( $post_id, 'active_date_start', $creative->active_date_start);
         update_post_meta( $post_id, 'active_date_end', $creative->active_date_end);
+
+        wp_set_object_terms($post_id, $creative->offer_name, 'category', true );
+        wp_remove_object_terms($post_id, 'offer-life', 'category');
         
 
         $short_link_id = affiliates_one_create_short_link($creative->tracking_url, $creative->id);
