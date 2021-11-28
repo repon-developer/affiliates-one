@@ -35,16 +35,23 @@ function get_affiliatesone_category_groups() {
 }
 
 function affiliatesone_get_creatives($offer_id) {
-    $api_key = get_option( 'affiliates_one_api_key');
-
     $query_arg = [
         'locale' => AO_LOCALE,        
         'offer_id' => $offer_id,
         'creative_type' => 'feed',
-        'api_key' => $api_key
+        'api_key' => get_option( 'affiliates_one_api_key')
     ];
-    
-    $response = @file_get_contents(add_query_arg($query_arg, 'https://api.affiliates.com.tw/api/v1/affiliates/creatives.json'));
+
+    $url = add_query_arg($query_arg, 'https://api.affiliates.com.tw/api/v1/affiliates/creatives.json');
+
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+    $response = curl_exec($curl);
+    curl_close($curl);
 
     $result = json_decode($response);
     return is_array($result->data->creatives) ? $result->data->creatives : [];
