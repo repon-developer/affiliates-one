@@ -92,7 +92,10 @@ class AffiliatesOne {
             return $temp_post;
         }
 
-        $temp_post['post_title'] = get_post_meta( $temp_post['ID'], 'offer_name', true);
+        if ( get_post_meta( $temp_post['ID'], 'affiliates_one_creative_id', true) ) {
+            $temp_post['post_title'] = get_post_meta( $temp_post['ID'], 'offer_name', true);
+        }
+
         $temp_post['post_content'] = $get_template->post_content;
         $temp_post['post_status'] = 'publish';
         return $temp_post;
