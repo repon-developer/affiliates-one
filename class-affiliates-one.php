@@ -94,9 +94,7 @@ class AffiliatesOne {
 
         if ( get_post_meta( $temp_post['ID'], 'affiliates_one_creative_id', true) ) {
             $creative_title = get_post_meta( $temp_post['ID'], 'title', true);
-
-            $title = get_the_title( $temp_post['ID'] );
-            $temp_post['post_title'] = str_replace('[offer_title]', $creative_title, $temp_post['post_title']);            
+            $temp_post['post_title'] = str_replace('[offer_title]', $creative_title, $temp_post['post_title']);
         }
 
         $temp_post['post_content'] = $get_template->post_content;

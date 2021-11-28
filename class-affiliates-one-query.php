@@ -38,7 +38,7 @@ class AffiliatesOne_Query {
         $get_template = get_post(get_option('affiliates_one_template'));
 
         if ( is_a($get_template, 'WP_Post') ) {
-            //$post_args['post_title'] = str_replace('[offer_title]', $creative->offer_name, $get_template->post_title );
+            $post_args['post_title'] = str_replace('[offer_title]', $creative->title, $get_template->post_title );
             $post_args['post_content'] = $get_template->post_content;
         }
     
