@@ -87,9 +87,20 @@ class AffiliatesOne {
     }
 
     function act_load_template($temp_post) {
-        $title = get_the_title( $temp_post['ID'] );
-        $temp_post['post_title'] = str_replace('[offer_title]', $title, $temp_post['post_title'] );
+        $get_template = get_post(get_option('affiliates_one_template'));
+        if ( !is_a($get_template, 'WP_Post') ) {
+            return $temp_post;
+        }
+
+        $temp_post['post_title'] = get_post_meta( $temp_post['ID'], 'offer_name', true);
+        $temp_post['post_content'] = $get_template->post_content;
         $temp_post['post_status'] = 'publish';
         return $temp_post;
+        
+        
+        // $title = get_the_title( $temp_post['ID'] );
+        // $temp_post['post_title'] = str_replace('[offer_title]', $title, $temp_post['post_title'] );
+        // $temp_post['post_status'] = 'publish';
+        // return $temp_post;
     }
 }

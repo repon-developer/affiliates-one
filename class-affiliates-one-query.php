@@ -42,20 +42,13 @@ class AffiliatesOne_Query {
             $post_args['post_content'] = $get_template->post_content;
         }
     
-        if ( $post_id ) {
-            unset($post_args['post_content']);
-        }
-
-        if ( empty($post_args['post_content']) ) {
-            $post_args['post_content'] = '';
-        }
-
         $post_id = wp_insert_post($post_args); 
         if ( !$post_id ) return false;
         
         update_post_meta( $post_id, 'affiliates_one_creative_id', $creative->id);
 
         update_post_meta( $post_id, 'content', $creative->content);
+        update_post_meta( $post_id, 'offer_name', $creative->offer_name);
 
         update_post_meta( $post_id, 'promo_text_1', $creative->promo_text_1);
         update_post_meta( $post_id, 'promo_text_2', $creative->promo_text_2);
