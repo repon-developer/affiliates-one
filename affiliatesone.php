@@ -20,10 +20,7 @@ define('AO_DIR', plugin_dir_path( __FILE__ ) );
 
 define('AO_URI', plugin_dir_url( __FILE__ ) );
 define('AFFILIATES_ONE_PER_PAGE', 1500);
-define('AO_TRANSIENT_TIME', 86400);
-
-//define('AO_LOCALE', 'zh-TW');
-define('AO_LOCALE', 'en-US');
+define('AO_LOCALE', 'zh-TW');
 
 require_once AO_DIR . 'helpers.php';
 require_once AO_DIR . 'class-affiliates-one.php';
