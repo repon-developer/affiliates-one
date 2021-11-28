@@ -28,16 +28,21 @@ class AffiliatesOne_Cron {
         if ( !is_array($result->data->offers)) {
             return;
         }
-
-        if ( ( $current_page * AFFILIATES_ONE_PER_PAGE ) > $result->data_length ) {
-            $current_page = 0;
-        }
-
-        update_option( 'affiliates_one_last_page', $current_page);
         
         while ($offer = current($result->data->offers)) {
             next($result->data->offers);
             AffiliatesOne_Query::save_creatives($offer->id);
+        }
+
+        $has_page = $result->data_length > ($current_page * AFFILIATES_ONE_PER_PAGE);
+        if ( !$has_page ) {
+            $current_page = 0;
+        }
+
+        update_option( 'affiliates_one_last_page', $current_page);
+
+        if ( $has_page ) {
+            $this->get_offers_hook_callback();
         }
     }   
 }
@@ -45,21 +50,5 @@ class AffiliatesOne_Cron {
 add_action( 'init', function(){
     if ( !isset($_GET['cron']) ) return;
     do_action( 'affiliates_one_get_offers_hook');
-    exit;
-});
-
-add_action( 'initddd', function(){
-    if ( !isset($_GET['cron_s']) ) return;
-
-    
-    global $wpdb;
-
-    $result = $wpdb->get_results("SELECT * FROM $wpdb->options WHERE `option_name` LIKE '%ffiliates_one_offer_%'");
-    
-
-    var_dump('<pre>', $result);
-
-
-
     exit;
 });

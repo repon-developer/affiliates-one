@@ -51,6 +51,7 @@ class AffiliatesOne_Query {
         if ( !$post_id ) return false;
         
         update_post_meta( $post_id, 'affiliates_one_creative_id', $creative->id);
+        update_post_meta( $post_id, 'content', $post_content);
         update_post_meta( $post_id, 'promo_text_1', $creative->promo_text_1);
         update_post_meta( $post_id, 'promo_text_2', $creative->promo_text_2);
         update_post_meta( $post_id, 'button_text', $creative->button_text);
