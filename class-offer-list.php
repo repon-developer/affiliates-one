@@ -144,6 +144,7 @@ class AffiliatesOne_Offers_List extends WP_List_Table {
 
     function get_offers($current_page = 1, $per_page = 15) {
         global $wpdb;
+        return [];
 
         $query_arg = [
             'page' => $current_page,
@@ -312,7 +313,6 @@ class AffiliatesOne_Offer_page {
 
     function register_admin_menu_page() {
         $this->table_offer = new AffiliatesOne_Offers_List();
-        $this->table_offer->prepare_items();
 
         $hook = add_menu_page(
             __( 'Affiliates One', 'affiliates-one' ),
@@ -326,7 +326,8 @@ class AffiliatesOne_Offer_page {
         add_action( "load-$hook", [ $this, 'screen_option' ] );
     }
 
-    function affiliates_one_menu_callback() {?>
+    function affiliates_one_menu_callback() {
+        $this->table_offer->prepare_items(); ?>
 
         <div class="wrap affiliates-one-wrap">
             <div id="icon-users" class="icon32"></div>
