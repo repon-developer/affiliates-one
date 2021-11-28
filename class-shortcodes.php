@@ -168,3 +168,51 @@ class AffiliatesOne_Shortcodes {
     }
 }
 
+class AffiliatesOne_Creative_Shortcodes {
+    function __construct() {
+        add_shortcode( 'creative_field', [$this, 'creative_field_shortcode']);
+        add_shortcode( 'creative_shortlink', [$this, 'creative_shortlink']);
+    }
+
+    public function creative_field_shortcode($atts) {
+        $atts = shortcode_atts(['field' => ''], $atts);
+        //Fields - promo_text_1, promo_text_2, button_text, coupon_code, original_price, discount_price
+
+        $field = trim($atts['field']);
+        if ( empty($field)) {
+            return;
+        }
+
+        return get_post_meta( get_the_id(), $field, true);
+    }
+
+    function creative_shortlink($atts, $content = null) {
+        $atts = shortcode_atts([
+            'class' => '',
+            'rel' => 'nofollow noreferrer noopener'
+        ], $atts);
+
+        extract($atts);
+
+        $short_link_id = get_post_meta( get_the_id(), 'creative_short_link', true);
+        if ( !$short_link_id) return '';
+
+        $post = get_post( $short_link_id );
+
+        if ( !is_a($post, 'WP_Post') ) {
+            return '';
+        }
+
+        if ( $content == null) {
+            return get_permalink( $post->ID);
+        }
+
+        $permalink = get_permalink( $post->ID);
+
+        ob_start(); ?>
+        <a target="_blank" href="<?php echo $permalink; ?>" class="<?php echo $class ?>" rel="<?php echo $rel ?>"><?php echo do_shortcode( $content ); ?></a>
+        <?php return ob_get_clean();
+    }
+}
+
+return new AffiliatesOne_Creative_Shortcodes();
