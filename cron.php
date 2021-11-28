@@ -24,7 +24,7 @@ class AffiliatesOne_Cron {
         $get_last_page = get_option('affiliates_one_last_page', 0);
         $current_page = absint( $get_last_page ) + 1;
 
-        $result = get_affiliates_one_offers(['page' => $current_page, 'per_page' => AFFILIATES_ONE_PER_PAGE]);
+        $result = get_affiliates_one_offers(['page' => 1, 'per_page' => AFFILIATES_ONE_PER_PAGE]);
         if ( !is_array($result->data->offers)) {
             return;
         }
