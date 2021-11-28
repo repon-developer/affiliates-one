@@ -24,8 +24,7 @@ class AffiliatesOne_Cron {
         $get_last_page = get_option('affiliates_one_last_page', 0);
         $current_page = absint( $get_last_page ) + 1;
 
-        $result = get_affiliates_one_offers(['page' => $current_page, 'browse_statuses' => 'Active', 'per_page' => AFFILIATES_ONE_PER_PAGE]);
-        var_dump($result->data->offers);
+        $result = get_affiliates_one_offers(['page' => $current_page, 'per_page' => AFFILIATES_ONE_PER_PAGE]);
         if ( !is_array($result->data->offers)) {
             return;
         }
@@ -49,7 +48,7 @@ add_action( 'init', function(){
     exit;
 });
 
-add_action( 'init', function(){
+add_action( 'initddd', function(){
     if ( !isset($_GET['cron_s']) ) return;
 
     

@@ -61,8 +61,8 @@ function get_affiliates_one_offers($query_args = []) {
     
     if(is_array($result->data->offers)) {
         array_walk($result->data->offers, function(&$offer){
-            update_option( 'affiliates_one_offer_' . $offer->id, $offer);
             $offer->creatives = AffiliatesOne_Query::get_creatives($offer->id);
+            update_option( 'affiliates_one_offer_' . $offer->id, $offer);
         });
     }
     

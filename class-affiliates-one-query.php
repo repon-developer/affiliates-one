@@ -8,7 +8,8 @@ class AffiliatesOne_Query {
             return false;
         }
 
-        return (object) array_merge((array)$current_offer, ['creatives' => affiliatesone_get_creatives($offer_id)]);
+        return $current_offer;
+        //return (object) array_merge((array)$current_offer, ['creatives' => affiliatesone_get_creatives($offer_id)]);
     }
 
     public static function save_creative($creative) {
