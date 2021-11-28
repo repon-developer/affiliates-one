@@ -30,7 +30,7 @@ class AffiliatesOne_Query {
     
         $post_args = array(
             'ID' => $post_id,
-            'post_title' => $creative->offer_name,
+            'post_title' => $creative->title,
             'post_content' => $post_content,
             'post_status' => 'publish'
         );
@@ -47,6 +47,7 @@ class AffiliatesOne_Query {
         
         update_post_meta( $post_id, 'affiliates_one_creative_id', $creative->id);
 
+        update_post_meta( $post_id, 'title', $creative->title);
         update_post_meta( $post_id, 'content', $creative->content);
         update_post_meta( $post_id, 'offer_name', $creative->offer_name);
 
